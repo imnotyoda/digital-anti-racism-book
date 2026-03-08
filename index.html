@@ -42,14 +42,6 @@ body {
   padding: 15px;
   font-size: 1.5rem;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#book-header img {
-  height: 30px;
-  margin-right: 10px;
 }
 
 #book-pages {
@@ -142,10 +134,7 @@ button:hover {
 <body>
 
 <div id="app">
-  <div id="book-header">
-    <img src="icon-192.png" alt="Logo">
-    Digital Anti-Racism Book
-  </div>
+  <div id="book-header">Digital Anti-Racism Book</div>
 
   <div id="book-pages">
     <div class="page">
@@ -193,7 +182,7 @@ let current = Number(localStorage.getItem("currentPage")) || 0;
 const progress = document.getElementById("progress");
 
 function updateProgress() {
-  progress.textContent = `Page ${current+1} of ${pages.length}`;
+  progress.textContent = `Page ${current + 1} of ${pages.length}`;
   localStorage.setItem("currentPage", current);
 }
 
@@ -217,5 +206,6 @@ if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js");
 }
 </script>
+
 </body>
 </html>
