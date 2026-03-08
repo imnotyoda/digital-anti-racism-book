@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Anti Racism</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e3a8a">
+
+
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<style>
+body {
+  font-family: Georgia, serif;
+  background: #cbd5e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#app {
+  width: 700px;
+  max-width: 95%;
+  height: 500px;
+  background: #fefefe;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#book-header {
+  background: #1e3a8a;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#book-header img {
+  height: 30px;
+  margin-right: 10px;
+}
+
+#book-pages {
+  flex: 1;
+  position: relative;
+  perspective: 1200px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
+  background: #fefefe;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+  opacity: 0;
+  transform: rotateY(15deg);
+  transition: all 0.6s ease;
+}
+
+.page.active {
+  left: 0;
+  opacity: 1;
+  transform: rotateY(0deg);
+}
+
+.page.exit-left {
+  left: -100%;
+  opacity: 0;
+  transform: rotateY(-15deg);
+}
+
+.page.exit-right {
+  left: 100%;
+  opacity: 0;
+  transform: rotateY(15deg);
+}
+
+.page h2 {
+  color: #1e3a8a;
+  margin-top: 0;
+}
+
+.page p {
+  color: #111827;
+  line-height: 1.6;
+}
+
+#book-nav {
+  text-align: center;
+  padding: 10px 0;
+  background: #f0f4f8;
+}
+
+button {
+  padding: 8px 14px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  background: #1e3a8a;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #3b82f6;
+}
+
+#progress {
+  text-align: center;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+@media(max-width: 768px) {
+  #app {
+    width: 90%;
+    height: 90%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="book-header">
+    <img src="icon-192.png" alt="Logo">
+    Digital Anti-Racism Book
+  </div>
+
+  <div id="book-pages">
+    <div class="page">
+      <h2>Page 1: Introduction</h2>
+      <p>Racism happens when people judge or treat others unfairly because of their race, culture, or background. Learning about anti-racism helps us build a fair and respectful society.</p>
+      <p>This small digital book explains how we can recognize racism and what we can do to stop it in our communities.</p>
+    </div>
+
+    <div class="page">
+      <h2>Page 2: Understanding Differences</h2>
+      <p>Every culture, language, and tradition adds something meaningful to the world. Instead of fearing differences, we can learn from them.</p>
+      <p>Listening to other people's experiences and respecting their identity helps create understanding and empathy.</p>
+    </div>
+
+    <div class="page">
+      <h2>Page 3: Preventing Racism</h2>
+      <p>We can prevent racism by speaking respectfully, learning about other cultures, and standing up when someone is treated unfairly.</p>
+      <p>Education, kindness, and empathy are powerful tools that help communities grow stronger.</p>
+    </div>
+
+    <div class="page">
+      <h2>Page 4: Everyday Actions</h2>
+      <p>Small actions matter. Avoid stereotypes, challenge unfair jokes, and encourage respectful conversations.</p>
+      <p>When people support each other and treat everyone equally, communities become safer and more welcoming.</p>
+    </div>
+
+    <div class="page">
+      <h2>Page 5: Conclusion</h2>
+      <p>A world without racism starts with understanding and respect. Everyone has a role in creating a fair and inclusive environment.</p>
+      <p>By learning, listening, and supporting one another, we can help make the world better.</p>
+    </div>
+  </div>
+
+  <div id="book-nav">
+    <button onclick="prev()">Previous</button>
+    <button onclick="next()">Next</button>
+    <button onclick="resetProgress()">Reset Progress</button>
+    <div id="progress">Page 1 of 5</div>
+  </div>
+</div>
+
+<script>
+const pages = document.querySelectorAll(".page");
+let current = Number(localStorage.getItem("currentPage")) || 0;
+const progress = document.getElementById("progress");
+
+function updateProgress() {
+  progress.textContent = `Page ${current+1} of ${pages.length}`;
+  localStorage.setItem("currentPage", current);
+}
+
+function showPage(index) {
+  pages.forEach((page,i)=>{
+    page.classList.remove("active","exit-left","exit-right");
+    if(i<index) page.classList.add("exit-left");
+    else if(i>index) page.classList.add("exit-right");
+  });
+  pages[index].classList.add("active");
+  updateProgress();
+}
+
+function next() { if(current<pages.length-1) current++; showPage(current); }
+function prev() { if(current>0) current--; showPage(current); }
+function resetProgress() { localStorage.clear(); current=0; showPage(current); }
+
+showPage(current);
+
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>
